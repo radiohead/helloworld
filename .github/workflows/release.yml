@@ -59,7 +59,7 @@ jobs:
       - name: "Upload release URL file"
         uses: actions/upload-artifact@v1
         with:
-          name: RELEASE_UPLOAD_URL_FILE.txt
+          name: RELEASE_UPLOAD_URL_FILE
           path: RELEASE_UPLOAD_URL_FILE.txt
 
   upload_assets:
@@ -78,8 +78,7 @@ jobs:
       - name: "Download release URL file"
         uses: actions/download-artifact@v1
         with:
-          name: RELEASE_UPLOAD_URL_FILE.txt
-          path: RELEASE_UPLOAD_URL_FILE.txt
+          name: RELEASE_UPLOAD_URL_FILE
       - name: "Export release URL"
         id: get_release_url
         run: echo ::set-output name=RELEASE_UPLOAD_URL::$(cat RELEASE_UPLOAD_URL_FILE.txt)
@@ -87,7 +86,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
-          path: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
       - name: "Add build artifact to release"
         uses: actions/upload-release-asset@v1
         env:
