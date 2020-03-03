@@ -70,7 +70,6 @@ jobs:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
     env:
-      artifact_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
     steps:
       - name: "Get build version"
         id: get_build_version
@@ -97,6 +96,6 @@ jobs:
           # See this blog post for more info:
           # https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           upload_url: ${{ steps.get_release_url.outputs.RELEASE_UPLOAD_URL }}
-          asset_path: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          asset_path: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz/radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
           asset_name: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
           asset_content_type: application/gzip
