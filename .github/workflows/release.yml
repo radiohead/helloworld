@@ -81,7 +81,7 @@ jobs:
           name: RELEASE_UPLOAD_URL_FILE
       - name: "Export release URL"
         id: get_release_url
-        run: echo ::set-output name=RELEASE_UPLOAD_URL::$(cat RELEASE_UPLOAD_URL_FILE.txt)
+        run: echo ::set-output name=RELEASE_UPLOAD_URL::$(cat RELEASE_UPLOAD_URL_FILE/RELEASE_UPLOAD_URL_FILE.txt)
       - name: "Download build artifact"
         uses: actions/download-artifact@v1
         with:
