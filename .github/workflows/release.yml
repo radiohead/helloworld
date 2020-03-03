@@ -26,7 +26,8 @@ jobs:
           go-version: "1.13"
       - name: "Create build artifact"
         run: |
-          make test && make build -e
+          make test && \
+          make build -e && \
           tar -czvf ${GONAME}.tar.gz ${GONAME}
       - name: "Upload build artifact"
         uses: actions/upload-artifact@v1
