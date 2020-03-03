@@ -13,12 +13,10 @@ jobs:
       matrix:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
-    with:
-      artifact_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
     env:
       GOOS: ${{ matrix.os }}
       GOARCH: ${{ matrix.arch }}
-      GONAME: ${INPUT_ARTIFACT_NAME}
+      GONAME: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v2
@@ -34,8 +32,8 @@ jobs:
       - name: "Upload build artifact"
         uses: actions/upload-artifact@v1
         with:
-          name: ${INPUT_ARTIFACT_NAME}
-          path: ${INPUT_ARTIFACT_NAME}
+          name: ${GONAME}.tar.gz
+          path: ${GONAME}.tar.gz
 
   create_release:
     runs-on: ubuntu-latest
@@ -59,14 +57,14 @@ jobs:
       matrix:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
-    with:
+    env:
       artifact_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
     steps:
       - name: "Download build artifact"
         uses: actions/download-artifact@v1
         with:
-          name: ${GONAME}.tar.gz"
-          path: "${GONAME}"
+          name: ${INPUT_ARTIFACT_NAME}
+          path: ${INPUT_ARTIFACT_NAME}
       - name: "Add build artifact to release"
         uses: actions/upload-release-asset@v1
         env:
