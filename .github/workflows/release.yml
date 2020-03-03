@@ -13,10 +13,12 @@ jobs:
       matrix:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
+    with:
+      artifact_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
     env:
       GOOS: ${{ matrix.os }}
       GOARCH: ${{ matrix.arch }}
-      GONAME: "radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}"
+      GONAME: ${INPUT_ARTIFACT_NAME}
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v2
@@ -32,8 +34,8 @@ jobs:
       - name: "Upload build artifact"
         uses: actions/upload-artifact@v1
         with:
-          name: ${GONAME}.tar.gz"
-          path: "${GONAME}"
+          name: ${INPUT_ARTIFACT_NAME}
+          path: ${INPUT_ARTIFACT_NAME}
 
   create_release:
     runs-on: ubuntu-latest
@@ -57,8 +59,8 @@ jobs:
       matrix:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
-    env:
-      GONAME: "radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}"
+    with:
+      artifact_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
     steps:
       - name: "Download build artifact"
         uses: actions/download-artifact@v1
@@ -76,6 +78,6 @@ jobs:
           # See this blog post for more info:
           # https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${GONAME}.tar.gz
-          asset_name: ${GONAME}.tar.gz
+          asset_path: ${INPUT_ARTIFACT_NAME}
+          asset_name: ${INPUT_ARTIFACT_NAME}
           asset_content_type: application/gzip
