@@ -13,11 +13,10 @@ jobs:
       matrix:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
-    env:
-      GOOS: ${{ matrix.os }}
-      GOARCH: ${{ matrix.arch }}
-      GONAME: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}
     steps:
+      - name: "Get build version"
+        id: get_build_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: "Checkout repo"
         uses: actions/checkout@v2
       - name: "Setup Go environment"
@@ -25,6 +24,10 @@ jobs:
         with:
           go-version: "1.13"
       - name: "Create build artifact"
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          GONAME: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
         run: |
           make test && \
           make build -e && \
@@ -32,8 +35,8 @@ jobs:
       - name: "Upload build artifact"
         uses: actions/upload-artifact@v1
         with:
-          name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
-          path: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          name: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          path: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
 
   create_release:
     runs-on: ubuntu-latest
@@ -60,11 +63,14 @@ jobs:
     env:
       artifact_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
     steps:
+      - name: "Get build version"
+        id: get_build_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: "Download build artifact"
         uses: actions/download-artifact@v1
         with:
-          name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
-          path: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          name: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          path: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
       - name: "Add build artifact to release"
         uses: actions/upload-release-asset@v1
         env:
@@ -76,6 +82,6 @@ jobs:
           # See this blog post for more info:
           # https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
-          asset_name: radiohead-helloworld-${{ github.ref }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          asset_path: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          asset_name: radiohead-helloworld-${{ steps.get_build_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
           asset_content_type: application/gzip
