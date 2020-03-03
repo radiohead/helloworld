@@ -59,7 +59,7 @@ jobs:
       - name: "Upload release URL file"
         uses: actions/upload-artifact@v1
         with:
-          name: RELEASE_UPLOAD_URL_FILE
+          name: RELEASE_UPLOAD_URL_FILE.txt
           path: RELEASE_UPLOAD_URL_FILE.txt
 
   upload_assets:
@@ -78,7 +78,7 @@ jobs:
       - name: "Download release URL file"
         uses: actions/download-artifact@v1
         with:
-          name: RELEASE_UPLOAD_URL_FILE
+          name: RELEASE_UPLOAD_URL_FILE.txt
           path: RELEASE_UPLOAD_URL_FILE.txt
       - name: "Export release URL"
         id: get_release_url
