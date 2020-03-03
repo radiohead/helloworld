@@ -69,7 +69,6 @@ jobs:
       matrix:
         os: ["darwin", "linux", "freebsd"]
         arch: ["386", "amd64"]
-    env:
     steps:
       - name: "Get build version"
         id: get_build_version
